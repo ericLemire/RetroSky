@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "partlycloudy-bg1.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

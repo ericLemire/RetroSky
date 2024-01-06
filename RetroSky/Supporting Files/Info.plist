@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleIdentifier</key>
+	<string>com.lesper.RetroSky</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>RetroSky uses your location to provide accurate and current weather updates even when the app is not active. This allows us to notify you of any sudden weather changes in your area, helping you stay prepared at all times.&quot;
+&quot;RetroSky uses your location to provide accurate and current weather updates even when the app is not active. This allows us to notify you of any sudden weather changes in your area, helping you stay prepared at all times.&quot;
+&quot;RetroSky uses your location to provide accurate and current weather updates even when the app is not active. This allows us to notify you of any sudden weather changes in your area, helping you stay prepared at all times.&quot;
+RetroSky uses your location to provide accurate and current weather updates even when the app is not active.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is required to check the weather.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>PixeloidSans-Bold.ttf</string>
+		<string>PixeloidSans.ttf</string>
+	</array>
+	<key>ATSApplicationFontsPath</key>
+	<string></string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+</dict>
+</plist>
