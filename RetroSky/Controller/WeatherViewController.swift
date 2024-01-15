@@ -147,25 +147,15 @@ class WeatherViewController: UIViewController {
         print("Animating Weather Type: \(weather) with \(config.images.count) images over \(config.duration) seconds")
         startAnimation(images: config.images, duration: config.duration, weather: weather)
     }
-
-
+    
     private func startAnimation(images: [UIImage], duration: Double, weather: WeatherType) {        
         print("Starting animation for \(weather). Total Images: \(images.count), Duration: \(duration)")
-
         weatherAnimationView.animationImages = images
         weatherAnimationView.animationDuration = duration
         weatherAnimationView.animationRepeatCount = 0
         weatherAnimationView.startAnimating()
 
         print("Animation should now be running for \(weather)")
-
-        // If it's the lightning animation, set up a delay before the next cycle.
-        if weather == .storm {
-            let delayBetweenStrikes = 5.0
-            Timer.scheduledTimer(withTimeInterval: duration + delayBetweenStrikes, repeats: false) { [weak self] _ in
-                self?.startAnimation(images: images, duration: duration, weather: weather)
-            }
-        }
     }
 }
 

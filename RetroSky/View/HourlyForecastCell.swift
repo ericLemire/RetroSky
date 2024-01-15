@@ -11,6 +11,8 @@ class HourlyForecastCell: UICollectionViewCell {
     @IBOutlet weak var hourLabel: UILabel!
     @IBOutlet weak var weatherIcon: UIImageView!
     @IBOutlet weak var tempLabel: UILabel!
+    @IBOutlet weak var chanceOfLabel: UILabel!
+    @IBOutlet weak var hourlyForecastStack: UIStackView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -33,7 +35,23 @@ class HourlyForecastCell: UICollectionViewCell {
             hourLabel.text = model.time
             weatherIcon.image = UIImage(named: model.weatherIconName)
             tempLabel.text = temperatureText
+            
+            switch model.weatherIconName {
+            case "rain", "nightRain", "rainStorm", "nightRainStorm":
+                chanceOfLabel.isHidden = false
+                chanceOfLabel.text = "\(model.chanceOfRain ?? 50)%"
+            case "snow", "nightSnow":
+                chanceOfLabel.isHidden = false
+                chanceOfLabel.text = "\(model.chanceOfSnow ?? 50)%"
+            default:
+                chanceOfLabel.isHidden = true
+            }
         }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        chanceOfLabel.isHidden = true
     }
     
     func styleCell() {
@@ -41,6 +59,9 @@ class HourlyForecastCell: UICollectionViewCell {
         if let currentFontSize = hourLabel.font?.pointSize {
             hourLabel.font = UIFont(name: "PixeloidSans", size: currentFontSize)
             tempLabel.font = UIFont(name: "PixeloidSans", size: currentFontSize)
+        }
+        if let chanceOfFontSize = chanceOfLabel.font?.pointSize {
+            chanceOfLabel.font = UIFont(name: "PixeloidSans", size: chanceOfFontSize)
         }
     }
 }

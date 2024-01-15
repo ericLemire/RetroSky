@@ -17,7 +17,8 @@ struct HourForecast {
     var time: String
     var conditionId: Int?
     var temperatureC: Double?
-    let chanceOf: String?
+    let chanceOfRain: Int?
+    let chanceOfSnow: Int?
     let specialEvent: SunriseSunsetEvent
     let sunriseTime: String?  
     let sunsetTime: String? 

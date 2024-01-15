@@ -122,7 +122,7 @@ struct WeatherJSONParser: JSONParserProtocol {
             let day = DayForecast(day: shortDayOfWeek,
                                   conditionId: decodedData.forecast.forecastday[i].day.condition.code,
                                   highC: decodedData.forecast.forecastday[i].day.maxtempC,
-                                  lowC: decodedData.forecast.forecastday[i].day.mintempC)
+                                  lowC: decodedData.forecast.forecastday[i].day.mintempC, chanceOfRain: decodedData.forecast.forecastday[i].day.dailyChanceOfRain, chanceOfSnow: decodedData.forecast.forecastday[i].day.dailyChanceOfSnow)
             
             dailyForecast.append(day)
         }
@@ -185,11 +185,11 @@ struct WeatherJSONParser: JSONParserProtocol {
         var sunEvents: [HourForecast] = []
 
         // Create and append sunrise event
-        let sunriseEvent = HourForecast(time: sunriseTime24hr, conditionId: nil, temperatureC: nil, chanceOf: nil, specialEvent: .sunrise, sunriseTime: sunriseTime24hr, sunsetTime: nil, isDay: nil)
+        let sunriseEvent = HourForecast(time: sunriseTime24hr, conditionId: nil, temperatureC: nil, chanceOfRain: nil, chanceOfSnow: nil, specialEvent: .sunrise, sunriseTime: sunriseTime24hr, sunsetTime: nil, isDay: nil)
         sunEvents.append(sunriseEvent)
 
         // Create and append sunset event
-        let sunsetEvent = HourForecast(time: sunsetTime24hr, conditionId: nil, temperatureC: nil, chanceOf: nil, specialEvent: .sunset, sunriseTime: nil, sunsetTime: sunsetTime24hr, isDay: nil)
+        let sunsetEvent = HourForecast(time: sunsetTime24hr, conditionId: nil, temperatureC: nil, chanceOfRain: nil, chanceOfSnow: nil, specialEvent: .sunset, sunriseTime: nil, sunsetTime: sunsetTime24hr, isDay: nil)
         sunEvents.append(sunsetEvent)
 
         return sunEvents
@@ -223,10 +223,10 @@ struct WeatherJSONParser: JSONParserProtocol {
             }
             
             if (dayType == .today && hourInt >= currentHour) || dayType == .tomorrow {
-                let hourForecast = HourForecast(time: extractedHour, conditionId: hourData.condition.code, temperatureC: hourData.tempC, chanceOf: nil, specialEvent: .none,  sunriseTime: forecastDay.astro.sunrise, sunsetTime: forecastDay.astro.sunset, isDay: forecastDay.hour[index].isDay)
+                let hourForecast = HourForecast(time: extractedHour, conditionId: hourData.condition.code, temperatureC: hourData.tempC, chanceOfRain: hourData.chanceOfRain, chanceOfSnow: nil, specialEvent: .none,  sunriseTime: forecastDay.astro.sunrise, sunsetTime: forecastDay.astro.sunset, isDay: forecastDay.hour[index].isDay)
                 hourlyForecasts.append(hourForecast)
                 count += 1
-
+                
                 if count >= neededHours {
                     break
                 }

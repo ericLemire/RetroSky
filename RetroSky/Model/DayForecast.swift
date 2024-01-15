@@ -12,6 +12,8 @@ struct DayForecast {
     let conditionId: Int
     let highC: Double
     let lowC: Double
+    let chanceOfRain: Int?
+    let chanceOfSnow: Int?
     
     var weatherIconName: String {
         if let weatherCondition = WeatherModel.weatherCodeMap[conditionId] {

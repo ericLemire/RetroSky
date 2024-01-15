@@ -12,6 +12,7 @@ class DailyForecastCell: UICollectionViewCell {
     @IBOutlet weak var weatherIcon: UIImageView!
     @IBOutlet weak var lowTempLabel: UILabel!
     @IBOutlet weak var highTempLabel: UILabel!
+    @IBOutlet weak var chanceOfLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,9 +21,20 @@ class DailyForecastCell: UICollectionViewCell {
     
     func configure(with model: DayForecast, formatter: TemperatureFormatter) {
         dayLabel.text = model.day
-        highTempLabel.text = "\(formatter.formattedTemperature(for: model.highC))°"
-        lowTempLabel.text = "\(formatter.formattedTemperature(for: model.lowC))°"
+        highTempLabel.text = "H: \(formatter.formattedTemperature(for: model.highC))°"
+        lowTempLabel.text = "L: \(formatter.formattedTemperature(for: model.lowC))°"
         weatherIcon.image = UIImage(named: model.weatherIconName)
+        
+        switch model.weatherIconName {
+        case "rain", "nightRain", "rainStorm", "nightRainStorm":
+            chanceOfLabel.isHidden = false
+            chanceOfLabel.text = "\(model.chanceOfRain ?? 50)%"
+        case "snow", "nightSnow":
+            chanceOfLabel.isHidden = false
+            chanceOfLabel.text = "\(model.chanceOfSnow ?? 50)%"
+        default:
+            chanceOfLabel.isHidden = true
+        }
     }
     
     func styleCell() {
@@ -31,5 +43,13 @@ class DailyForecastCell: UICollectionViewCell {
             lowTempLabel.font = UIFont(name: "PixeloidSans", size: currentFontSize)
             highTempLabel.font = UIFont(name: "PixeloidSans", size: currentFontSize)
         }
+        if let chanceOfFontSize = chanceOfLabel.font?.pointSize {
+            chanceOfLabel.font = UIFont(name: "PixeloidSans", size: chanceOfFontSize)
+        }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        chanceOfLabel.isHidden = true
     }
 }
