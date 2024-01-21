@@ -12,6 +12,9 @@ class WeatherViewController: UIViewController {
     
     // MARK: - UI Outlets
     
+    @IBOutlet weak var loadingView: UIView!
+    @IBOutlet weak var loadingAnimation: UIImageView!
+    
     // UI elements responsible for showing current weather.
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var temperatureNotation: UILabel!
@@ -23,7 +26,7 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var dailyForecastLabel: UILabel!
     @IBOutlet weak var hourlyForecastCollectionView: UICollectionView!
     @IBOutlet weak var dailyForecastCollectionView: UICollectionView!
-    
+    @IBOutlet weak var dailyForecastHeader: UILabel!
     
     func refreshWeatherData() {
         if CLLocationManager.locationServicesEnabled() {
@@ -60,8 +63,8 @@ class WeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
             
-        print("WeatherViewController: ViewDidLoad called")
-        
+        setupLoadingAnimation()
+
         weatherManager.delegate = self
         locationManager.delegate = self
         
@@ -76,13 +79,13 @@ class WeatherViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("WeatherViewController: ViewWillAppear called")
+
         // Consider fetching weather data here if needed
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        print("WeatherViewController: ViewDidAppear called")
+
         // Consider fetching weather data here if needed
     }
     
@@ -120,6 +123,14 @@ class WeatherViewController: UIViewController {
             // Refreshing collection view data
             self.dailyForecastCollectionView.reloadData()
             self.hourlyForecastCollectionView.reloadData()
+            
+            // Animate the transition
+            UIView.transition(with: self.view, duration: 0.5, options: [.transitionCrossDissolve], animations: {
+                self.loadingView.isHidden = true
+                self.hourlyForecastCollectionView.isHidden = false
+                self.dailyForecastCollectionView.isHidden = false
+                self.dailyForecastHeader.isHidden = false
+            }, completion: nil)
         }
     }
     
@@ -156,6 +167,15 @@ class WeatherViewController: UIViewController {
         weatherAnimationView.startAnimating()
 
         print("Animation should now be running for \(weather)")
+    }
+    
+    func setupLoadingAnimation() {
+        let imageNames = ["loading1", "loading2", "loading3", "loading4", "loading5"]
+        let images = imageNames.compactMap { UIImage(named: $0) }
+        loadingAnimation.animationImages = images
+        loadingAnimation.animationDuration = 1.0
+        loadingAnimation.animationRepeatCount = 0
+        loadingAnimation.startAnimating()
     }
 }
 
