@@ -56,6 +56,8 @@ extension WeatherViewController: CLLocationManagerDelegate {
                 // Unlikely but handles nil coordinate scenario.
                 AlertUtility.showAlert(on: self, title: "Location Unavailable", message: "Retry or check location settings.")
             }
+            // Stop updating location to conserve battery
+            manager.stopUpdatingLocation()
         }
     }
     
