@@ -28,14 +28,6 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var dailyForecastCollectionView: UICollectionView!
     @IBOutlet weak var dailyForecastHeader: UILabel!
     
-    func refreshWeatherData() {
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.startUpdatingLocation()
-        } else {
-            AlertUtility.showAlert(on: self, title: "Location Services Disabled", message: "Please enable location services in your settings to fetch weather data.")
-        }
-    }
-    
     // MARK: - Core Properties
     
     // Cache last known geolocation in case of network retries.
@@ -79,14 +71,7 @@ class WeatherViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        // Consider fetching weather data here if needed
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        // Consider fetching weather data here if needed
+        refreshWeatherData()
     }
     
     /// Configures how temperature is displayed, based on user or system settings.
@@ -95,6 +80,16 @@ class WeatherViewController: UIViewController {
     }
 
     // MARK: - Helper Methods
+    
+    func refreshWeatherData() {
+        if CLLocationManager.locationServicesEnabled() {
+            // Start updating location to trigger weather data fetch
+            locationManager.startUpdatingLocation()
+        } else {
+            // Location services are not enabled; prompt the user
+            AlertUtility.showAlert(on: self, title: "Location Services Disabled", message: "Please enable location services in your settings to fetch weather data.")
+        }
+    }
     
     func setupTemperatureUI() {
         let fontName = "PixeloidSans"
