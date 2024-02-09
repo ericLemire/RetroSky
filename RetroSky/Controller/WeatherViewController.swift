@@ -75,11 +75,26 @@ class WeatherViewController: UIViewController {
         // Assigning data sources for forecast collection views
         hourlyForecastCollectionView.dataSource = self
         dailyForecastCollectionView.dataSource = self
+        
+        // Observer for app becoming active in order to trigger a weather data update
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        refreshWeatherData()
+    @objc func appDidBecomeActive() {
+        if isAlreadyLaunched {
+            refreshWeatherData()
+        }
+    }
+    
+    deinit {
+        // Remove observers when the view controller is being deinitialized
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isAlreadyLaunched = true
     }
     
     /// Configures how temperature is displayed, based on user or system settings.
