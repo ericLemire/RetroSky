@@ -13,28 +13,15 @@ extension WeatherViewController: CLLocationManagerDelegate {
     static let locationDisabledTitle = "Location Access Disabled"
     static let locationDisabledMessage = "To enable weather updates based on your location, please open this app's settings and set location access to 'While Using the App'."
     
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch manager.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways:
             // Requests immediate location and starts significant change monitoring, if available.
-            locationManager.requestLocation()
-            if CLLocationManager.significantLocationChangeMonitoringAvailable() {
-                locationManager.startMonitoringSignificantLocationChanges()
-            }
+            requestLocationUpdates(manager)
         case .restricted, .denied:
             // Prompts for setting changes if access denied.
-            DispatchQueue.main.async {
-                AlertUtility.showAlert(
-                    on: self,
-                    title: WeatherViewController.locationDisabledMessage,
-                    // Detailed message to guide user through enabling location services.
-                    message: WeatherViewController.locationDisabledMessage,
-                    actions: [
-                        UIAlertAction(title: "Go to Settings", style: .default, handler: self.goToSettings),
-                        UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-                    ]
-                )
-            }
+            promptForLocationAccess()
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
         default:
@@ -65,6 +52,29 @@ extension WeatherViewController: CLLocationManagerDelegate {
         // Displays a UIAlert with the localized error description.
         DispatchQueue.main.async {
             AlertUtility.showAlert(on: self, title: "Error", message: error.localizedDescription)
+        }
+    }
+    
+    func requestLocationUpdates(_ manager: CLLocationManager) {
+        // Check if significant location change monitoring is available
+        if CLLocationManager.significantLocationChangeMonitoringAvailable() {
+            manager.startMonitoringSignificantLocationChanges()
+        } else {
+            manager.requestLocation()
+        }
+    }
+    
+    func promptForLocationAccess() {
+        DispatchQueue.main.async {
+            AlertUtility.showAlert(
+                on: self,
+                title: WeatherViewController.locationDisabledTitle,
+                message: WeatherViewController.locationDisabledMessage,
+                actions: [
+                    UIAlertAction(title: "Go to Settings", style: .default, handler: self.goToSettings),
+                    UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                ]
+            )
         }
     }
     

@@ -5,6 +5,8 @@
 //  Created by Eric Lemire on 2023/08/30.
 //
 
+//TODO: Refactor the WeatherViewController. Refactor The WeatherJSONParser, which is currently responsible for multiple tasks. Solve the mysterious purple warning. Solve the warnings in the log. Remove unnecessary print statements. Implement logging system. Create tests. Push to Github.
+
 import UIKit
 import CoreLocation
 
@@ -16,12 +18,16 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var loadingAnimation: UIImageView!
     
     // UI elements responsible for showing current weather.
+
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var temperatureNotation: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var degreeSymbol: UILabel!
     @IBOutlet weak var weatherAnimationView: UIImageView!
-   
+    @IBOutlet weak var feelsLikeLabel: UILabel!
+    @IBOutlet weak var feelsLikeTemperatureLabel: UILabel!
+    @IBOutlet weak var duck: UIImageView!
+    
     // UI elements responsible for displaying forecast data.
     @IBOutlet weak var dailyForecastLabel: UILabel!
     @IBOutlet weak var hourlyForecastCollectionView: UICollectionView!
@@ -30,6 +36,8 @@ class WeatherViewController: UIViewController {
     
     // MARK: - Core Properties
     
+    var isAlreadyLaunched = false
+
     // Cache last known geolocation in case of network retries.
     var lastKnownLatitude: CLLocationDegrees?
     var lastKnownLongitude: CLLocationDegrees?
@@ -80,7 +88,7 @@ class WeatherViewController: UIViewController {
     }
 
     // MARK: - Helper Methods
-    
+        
     func refreshWeatherData() {
         if CLLocationManager.locationServicesEnabled() {
             // Start updating location to trigger weather data fetch
@@ -98,6 +106,8 @@ class WeatherViewController: UIViewController {
         setFont(for: degreeSymbol, with: fontName, size: 80)
         setFont(for: cityLabel, with: fontName, size: 42)
         setFont(for: dailyForecastLabel, with: fontName, size: 16)
+        setFont(for: feelsLikeLabel, with: fontName, size: 17)
+        setFont(for: feelsLikeTemperatureLabel, with: fontName, size: 60)
     }
 
     func setFont(for label: UILabel, with fontName: String, size: CGFloat) {
@@ -114,6 +124,7 @@ class WeatherViewController: UIViewController {
             self.temperatureLabel.text = self.temperatureFormatter.formattedTemperature(for: weatherData.temperatureC)
             self.cityLabel.text = weatherData.cityName
             self.animateWeatherImageView(with: weatherData.weatherType, and: weatherData)
+            self.feelsLikeTemperatureLabel.text = "\(self.temperatureFormatter.formattedTemperature(for: weatherData.feelsLikeC))°C"
             
             // Refreshing collection view data
             self.dailyForecastCollectionView.reloadData()
@@ -126,6 +137,8 @@ class WeatherViewController: UIViewController {
                 self.dailyForecastCollectionView.isHidden = false
                 self.dailyForecastHeader.isHidden = false
             }, completion: nil)
+            
+            self.updateDuckAnimation(feelsLikeTemperature: weatherData.feelsLikeC, isDaytime: weatherData.isDay)
         }
     }
     
@@ -171,6 +184,34 @@ class WeatherViewController: UIViewController {
         loadingAnimation.animationDuration = 1.0
         loadingAnimation.animationRepeatCount = 0
         loadingAnimation.startAnimating()
+    }
+    
+    // MARK: - Duck Methods
+    
+    func determineComfortLevel(feelsLikeTemperature: Double) -> ComfortLevel {
+        if feelsLikeTemperature > Duck.hotThreshold {
+            return .tooHot
+        } else if feelsLikeTemperature < Duck.coldThreshold {
+            return .tooCold
+        } else {
+            return .comfortable
+        }
+    }
+
+    func updateDuckAnimation(feelsLikeTemperature: Double, isDaytime: Bool) {
+        print("Updating duck animation with temperature: \(feelsLikeTemperature), daytime: \(isDaytime)")
+        
+        let comfortLevel = determineComfortLevel(feelsLikeTemperature: feelsLikeTemperature)
+        let animationConfig = Duck.animationConfig(comfortLevel: comfortLevel, feelsLikeTemperature: feelsLikeTemperature, isDaytime: isDaytime)
+        
+        print("Animation images to be set: \(animationConfig.images.count)")
+        print(animationConfig.images)
+        duck.image = animationConfig.images[0]
+        duck.animationImages = animationConfig.images
+        duck.animationDuration = animationConfig.duration
+        duck.animationRepeatCount = 0
+        print("Starting duck animation...")
+        duck.startAnimating()
     }
 }
 

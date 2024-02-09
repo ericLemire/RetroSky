@@ -36,6 +36,7 @@
 		6DD0DCED2ABE69A2004A317B /* WeatherCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD0DCEC2ABE69A2004A317B /* WeatherCondition.swift */; };
 		6DD0DCEF2ABEB630004A317B /* WeatherViewControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD0DCEE2ABEB630004A317B /* WeatherViewControllerFactory.swift */; };
 		6DD0DCF12ABEF7C6004A317B /* TemperatureFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD0DCF02ABEF7C6004A317B /* TemperatureFormatter.swift */; };
+		6DE4D46F2B69BE4D00261D49 /* Duck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE4D46E2B69BE4D00261D49 /* Duck.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		6DD0DCEC2ABE69A2004A317B /* WeatherCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCondition.swift; sourceTree = "<group>"; };
 		6DD0DCEE2ABEB630004A317B /* WeatherViewControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewControllerFactory.swift; sourceTree = "<group>"; };
 		6DD0DCF02ABEF7C6004A317B /* TemperatureFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureFormatter.swift; sourceTree = "<group>"; };
+		6DE4D46E2B69BE4D00261D49 /* Duck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Duck.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				6DD0DCEC2ABE69A2004A317B /* WeatherCondition.swift */,
 				6D8509E92ABB260800BB2326 /* HourForecast.swift */,
 				6D8509EB2ABB261B00BB2326 /* DayForecast.swift */,
+				6DE4D46E2B69BE4D00261D49 /* Duck.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -295,6 +298,7 @@
 				6D239A272A9EB4BF00B62528 /* SceneDelegate.swift in Sources */,
 				6D8509C62AAEE2D400BB2326 /* WeatherData.swift in Sources */,
 				6D8509EE2ABBFB7600BB2326 /* ErrorEnums.swift in Sources */,
+				6DE4D46F2B69BE4D00261D49 /* Duck.swift in Sources */,
 				6D8509DF2ABB1F3A00BB2326 /* WeatherURLBuilder.swift in Sources */,
 				6D8509C42AAEE28F00BB2326 /* WeatherModel.swift in Sources */,
 			);

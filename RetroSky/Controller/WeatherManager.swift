@@ -26,7 +26,6 @@ struct WeatherManager {
     let apiKey: String?
     let keychainService = KeychainService()
 
-
     var delegate: WeatherManagerDelegate?
     
     init(urlBuilder: URLBuilderProtocol, networkService: NetworkServiceProtocol, jsonParser: JSONParserProtocol) {
