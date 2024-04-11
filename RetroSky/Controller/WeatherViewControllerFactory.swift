@@ -14,10 +14,12 @@ class WeatherViewControllerFactory {
         let urlBuilder = WeatherURLBuilder()
         let networkService = WeatherNetworkService()
         let jsonParser = WeatherJSONParser()
+        let locationManager = LocationManager()
         
         let weatherManager = WeatherManager(urlBuilder: urlBuilder,
                                             networkService: networkService,
-                                            jsonParser: jsonParser)
+                                            jsonParser: jsonParser, 
+                                            locationManager: locationManager)
         
         let viewController = WeatherViewController()
         viewController.weatherManager = weatherManager

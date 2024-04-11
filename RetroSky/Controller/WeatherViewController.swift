@@ -5,60 +5,46 @@
 //  Created by Eric Lemire on 2023/08/30.
 //
 
-//TODO: Refactor the WeatherViewController. Refactor The WeatherJSONParser, which is currently responsible for multiple tasks. Solve the mysterious purple warning. Solve the warnings in the log. Remove unnecessary print statements. Implement logging system. Create tests. Push to Github.
-
 import UIKit
 import CoreLocation
 
 class WeatherViewController: UIViewController {
     
     // MARK: - UI Outlets
+    // Outlets connecting the storyboard elements to the view controller for UI updates.
     
-    @IBOutlet weak var loadingView: UIView!
-    @IBOutlet weak var loadingAnimation: UIImageView!
+    // Displays the current loading state and weather animation.
+    @IBOutlet private weak var loadingView: UIView!
+    @IBOutlet private weak var loadingAnimation: UIImageView!
     
-    // UI elements responsible for showing current weather.
-
-    @IBOutlet weak var temperatureLabel: UILabel!
-    @IBOutlet weak var temperatureNotation: UILabel!
-    @IBOutlet weak var cityLabel: UILabel!
-    @IBOutlet weak var degreeSymbol: UILabel!
-    @IBOutlet weak var weatherAnimationView: UIImageView!
-    @IBOutlet weak var feelsLikeLabel: UILabel!
-    @IBOutlet weak var feelsLikeTemperatureLabel: UILabel!
-    @IBOutlet weak var duck: UIImageView!
+    // Displays current weather information.
+    @IBOutlet private weak var temperatureLabel: UILabel!
+    @IBOutlet private weak var temperatureNotation: UILabel!
+    @IBOutlet private weak var cityLabel: UILabel!
+    @IBOutlet private weak var degreeSymbol: UILabel!
+    @IBOutlet private weak var weatherAnimationView: UIImageView!
+    @IBOutlet private weak var feelsLikeLabel: UILabel!
+    @IBOutlet private weak var feelsLikeTemperatureLabel: UILabel!
+    @IBOutlet private weak var duck: UIImageView!
     
-    // UI elements responsible for displaying forecast data.
-    @IBOutlet weak var dailyForecastLabel: UILabel!
+    // Displays forecast data.
+    @IBOutlet private weak var dailyForecastLabel: UILabel!
+    @IBOutlet private weak var dailyForecastHeader: UILabel!
     @IBOutlet weak var hourlyForecastCollectionView: UICollectionView!
     @IBOutlet weak var dailyForecastCollectionView: UICollectionView!
-    @IBOutlet weak var dailyForecastHeader: UILabel!
     
     // MARK: - Core Properties
-    
-    var isAlreadyLaunched = false
-
-    // Cache last known geolocation in case of network retries.
-    var lastKnownLatitude: CLLocationDegrees?
-    var lastKnownLongitude: CLLocationDegrees?
-    
-    // Responsible for formatting temperature strings as either
+    // Flags and formatters for managing state and display formatting.
+    private var isAlreadyLaunched = false
     let temperatureFormatter = TemperatureFormatter()
-    
-    // Manages geolocation services to fetch and update the user's current location.
-    let locationManager = CLLocationManager()
-    
+        
+    // Manages weather data fetching and updates.
     var weatherManager: WeatherManager!
     
     // MARK: - Data Models
-    
-    // Caches hourly forecast data for use in the collection view.
+    // Stores weather forecast data for display in the UI.
     var hourlyForecast: [HourForecast] = []
-    
-    // Caches daily forecast data for use in the collection view.
     var dailyForecast: [DayForecast] = []
-    
-    // MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +52,7 @@ class WeatherViewController: UIViewController {
         setupLoadingAnimation()
 
         weatherManager.delegate = self
-        locationManager.delegate = self
+        weatherManager.uiDelegate = self
         
         // Configure temperature notation (e.g., Fahrenheit, Celsius) based on user location.
         setupTemperatureNotation()
@@ -105,13 +91,7 @@ class WeatherViewController: UIViewController {
     // MARK: - Helper Methods
         
     func refreshWeatherData() {
-        if CLLocationManager.locationServicesEnabled() {
-            // Start updating location to trigger weather data fetch
-            locationManager.startUpdatingLocation()
-        } else {
-            // Location services are not enabled; prompt the user
-            AlertUtility.showAlert(on: self, title: "Location Services Disabled", message: "Please enable location services in your settings to fetch weather data.")
-        }
+        weatherManager?.refreshWeatherData()
     }
     
     func setupTemperatureUI() {
@@ -165,14 +145,7 @@ class WeatherViewController: UIViewController {
         print("WeatherViewController: Handling weather fetch error: \(error)")
         
         DispatchQueue.main.async {
-            AlertUtility.showAlertWithRetry(on: self, title: "Oops!", message: errorMessage) {
-                // Retry logic if last known coordinates are available
-                if let latitude = self.lastKnownLatitude, let longitude = self.lastKnownLongitude {
-                    self.weatherManager.fetchWeather(latitude: latitude, longitude: longitude)
-                } else {
-                    AlertUtility.showAlert(on: self, title: "Sorry", message: "We're unable to fetch your location and weather data. Please ensure location services are enabled and try again.")
-                }
-            }
+            AlertUtility.showAlert(on: self, title: "Oops!", message: errorMessage)
         }
     }
     
@@ -249,5 +222,39 @@ extension WeatherViewController: WeatherManagerDelegate {
     }
 }
 
+extension WeatherViewController: WeatherManagerUIDelegate {
+    func showLocationAccessDeniedAlert() {
+        DispatchQueue.main.async {
+            AlertUtility.showAlert(on: self,
+                                   title: AlertMessages.accessDeniedTitle,
+                                   message: AlertMessages.accessDeniedMessage,
+                                   actions: [
+                                    UIAlertAction(title: "Go to Settings", style: .default, handler: self.goToSettings),
+                                    UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                                   ]
+            )
+        }
+    }
+                                   
+    func showLocationAccessRestrictedAlert() {
+        DispatchQueue.main.async {
+            AlertUtility.showAlert(on: self,
+                                   title: AlertMessages.accessRestrictedTitle,
+                                   message: AlertMessages.accessRestrictedMessage,
+                                   actions: [
+                                    UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                                   ]
+            )
+        }
+    }
+    
+    private func goToSettings(action: UIAlertAction) {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
+}
+               
 
 
+                                

@@ -7,6 +7,13 @@
 
 import UIKit
 
+enum AlertMessages {
+    static let accessDeniedTitle = "Location Access Denied"
+    static let accessDeniedMessage = "To enable weather updates based on your location, please open this app's settings and set location access to 'While Using the App."
+    static let accessRestrictedTitle = "Location Access Restricted"
+    static let accessRestrictedMessage = "Location services are currently restricted on your device, which prevents RetroSky from accessing your location. This restriction can be due to parental controls, privacy settings, or institutional policies. Please contact your device administrator or refer to the device's settings to change location services permissions if you wish to use this feature."
+}
+
 /// A utility struct for presenting common alerts in a UIViewController.
 struct AlertUtility {
     

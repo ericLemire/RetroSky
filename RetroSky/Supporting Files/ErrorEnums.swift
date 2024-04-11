@@ -7,10 +7,31 @@
 
 import Foundation
 
+enum LocationError: Error {
+    case locationServicesDisabled
+    case authorizationDenied
+    case authorizationRestricted
+}
+
+extension LocationError {
+    var description: String {
+        switch self {
+        case .locationServicesDisabled:
+            return "Location services are disabled."
+        case .authorizationDenied:
+            return "Location authorization was denied."
+        case .authorizationRestricted:
+            return "Location authorization is restricted."
+        }
+    }
+}
+
 enum WeatherManagerError: Error {
     case parsingError
     case networkError(Error)
     case apiKeyNotFound
+    case locationError(Error)
+
     
     var userFriendlyAlertMessage: String {
         switch self {
@@ -21,6 +42,9 @@ enum WeatherManagerError: Error {
             return "A network error occurred. Please check your internet connection and try again."
         case .apiKeyNotFound:
             return "We're having trouble accessing the weather service. If the problem persists, please contact the developer."
+        case .locationError(let underlyingError):
+            print("Location Error: \(underlyingError.localizedDescription)")
+            return "A location error occurred. Please ensure location services are enabled and try again."
         }
     }
 }

@@ -15,24 +15,33 @@ protocol WeatherManagerDelegate {
     func didFailToFetchWeatherWithError(error: WeatherManagerError)
 }
 
+/// Delegate for UI-related updates.
+protocol WeatherManagerUIDelegate: AnyObject {
+    func showLocationAccessDeniedAlert()
+    func showLocationAccessRestrictedAlert()
+}
+
 /// Manages operations related to fetching and parsing weather data.
-struct WeatherManager {
+class WeatherManager: LocationManagerDelegate {
     // Injected dependencies for forming URLs, making network requests, and parsing JSON.
     let urlBuilder: URLBuilderProtocol
     let networkService: NetworkServiceProtocol
     let jsonParser: JSONParserProtocol
+    var locationManager: LocationManagerProtocol
     
     // API key is initially loaded from environment variables then saved and retrieved from the Keychain for better security.
     let apiKey: String?
     let keychainService = KeychainService()
 
     var delegate: WeatherManagerDelegate?
+    weak var uiDelegate: WeatherManagerUIDelegate?
     
-    init(urlBuilder: URLBuilderProtocol, networkService: NetworkServiceProtocol, jsonParser: JSONParserProtocol) {
+    init(urlBuilder: URLBuilderProtocol, networkService: NetworkServiceProtocol, jsonParser: JSONParserProtocol, locationManager: LocationManagerProtocol) {
         self.urlBuilder = urlBuilder
         self.networkService = networkService
         self.jsonParser = jsonParser
-
+        self.locationManager = locationManager
+        
         // Attempt to retrieve the API key from the Keychain
         if let key = keychainService.retrieveApiKey() {
             self.apiKey = key
@@ -45,8 +54,33 @@ struct WeatherManager {
                 keychainService.saveApiKey(key)
             }
         }
+
+        self.locationManager.delegate = self
+    }
+    
+    func refreshWeatherData() {
+        locationManager.checkLocationServicesAndRequestLocation()
     }
 
+    func didUpdateLocations(_ latitude: CLLocationDegrees, _ longitude: CLLocationDegrees) {
+        // Fetch weather data for the new location.
+        fetchWeather(latitude: latitude, longitude: longitude)
+    }
+    
+    func didFailWithError(_ error: Error) {
+        // Inform the delegate about the location error
+        print("Location Error: \(error.localizedDescription)")
+        delegate?.didFailToFetchWeatherWithError(error: .locationError(error))
+    }
+    
+    func authorizationWasDenied() {
+        uiDelegate?.showLocationAccessDeniedAlert()
+    }
+    
+    func authorizationIsRestricted() {
+        uiDelegate?.showLocationAccessRestrictedAlert()
+    }
+    
     /// Fetches and updates weather data based on given geographic coordinates.
     func fetchWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
         // Guard against missing API key.
@@ -62,22 +96,22 @@ struct WeatherManager {
         networkService.performRequest(with: urlString) { data, error in
             if let error = error {
                 print("Network Error: \(error.localizedDescription)")
-                delegate?.didFailToFetchWeatherWithError(error: .networkError(error))
+                self.delegate?.didFailToFetchWeatherWithError(error: .networkError(error))
                 return
             }
 
             // Proceeds to parsing and model update if data exists, otherwise triggers error.
             if let safeData = data {
-                switch jsonParser.parseJSON(safeData) {
+                switch self.jsonParser.parseJSON(safeData) {
                 case .success(let weather):
-                    delegate?.didUpdateWeather(self, weather: weather)
+                    self.delegate?.didUpdateWeather(self, weather: weather)
                 case .failure(let error):
                     print("Parsing Error: \(error)")
-                    delegate?.didFailToFetchWeatherWithError(error: .parsingError)
+                    self.delegate?.didFailToFetchWeatherWithError(error: .parsingError)
                 }
             } else {
                 print("Data Error: Data is nil or corrupted.")
-                delegate?.didFailToFetchWeatherWithError(error: .parsingError)
+                self.delegate?.didFailToFetchWeatherWithError(error: .parsingError)
             }
         }
     }

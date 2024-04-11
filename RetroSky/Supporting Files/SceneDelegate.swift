@@ -19,10 +19,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let weatherURLBuilder = WeatherURLBuilder()
             let weatherNetworkService = WeatherNetworkService()
             let weatherJSONParser = WeatherJSONParser()
+            let locationManager = LocationManager()
 
             let weatherManager = WeatherManager(urlBuilder: weatherURLBuilder,
                                                 networkService: weatherNetworkService,
-                                                jsonParser: weatherJSONParser)
+                                                jsonParser: weatherJSONParser,
+                                                locationManager: locationManager)
             
             weatherViewController.weatherManager = weatherManager
         }
@@ -58,4 +60,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 }
+
+
 
