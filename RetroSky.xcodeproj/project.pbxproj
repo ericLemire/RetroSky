@@ -31,6 +31,7 @@
 		6D8509EE2ABBFB7600BB2326 /* ErrorEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8509ED2ABBFB7500BB2326 /* ErrorEnums.swift */; };
 		6D8509F02ABC22E900BB2326 /* AlertUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8509EF2ABC22E900BB2326 /* AlertUtility.swift */; };
 		6D8509F42ABD080600BB2326 /* WeatherViewController+CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8509F32ABD080600BB2326 /* WeatherViewController+CollectionView.swift */; };
+		6D8600D52BF1E903005B0043 /* WeatherDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8600D42BF1E903005B0043 /* WeatherDataTransformer.swift */; };
 		6D9CF0EB2B3FC21800661641 /* KeychainSwiftDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D9CF0EA2B3FC21700661641 /* KeychainSwiftDistrib.swift */; };
 		6D9CF0ED2B45918400661641 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D9CF0EC2B45918400661641 /* KeychainService.swift */; };
 		6DD0DCED2ABE69A2004A317B /* WeatherCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD0DCEC2ABE69A2004A317B /* WeatherCondition.swift */; };
@@ -66,6 +67,7 @@
 		6D8509ED2ABBFB7500BB2326 /* ErrorEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorEnums.swift; sourceTree = "<group>"; };
 		6D8509EF2ABC22E900BB2326 /* AlertUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertUtility.swift; sourceTree = "<group>"; };
 		6D8509F32ABD080600BB2326 /* WeatherViewController+CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WeatherViewController+CollectionView.swift"; sourceTree = "<group>"; };
+		6D8600D42BF1E903005B0043 /* WeatherDataTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDataTransformer.swift; sourceTree = "<group>"; };
 		6D9CF0EA2B3FC21700661641 /* KeychainSwiftDistrib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSwiftDistrib.swift; sourceTree = "<group>"; };
 		6D9CF0EC2B45918400661641 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		6DD0DCEC2ABE69A2004A317B /* WeatherCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCondition.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				6D9CF0EC2B45918400661641 /* KeychainService.swift */,
 				6D8509C12AAEE25000BB2326 /* WeatherManager.swift */,
 				6D612A192B77706900F7F0FB /* LocationManager.swift */,
+				6D8600D42BF1E903005B0043 /* WeatherDataTransformer.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -280,6 +283,7 @@
 				6D8509E22ABB1F7400BB2326 /* WeatherNetworkService.swift in Sources */,
 				6D8509E42ABB1F9200BB2326 /* WeatherJSONParser.swift in Sources */,
 				6D612A1A2B77706A00F7F0FB /* LocationManager.swift in Sources */,
+				6D8600D52BF1E903005B0043 /* WeatherDataTransformer.swift in Sources */,
 				6DD0DCEF2ABEB630004A317B /* WeatherViewControllerFactory.swift in Sources */,
 				6DD0DCF12ABEF7C6004A317B /* TemperatureFormatter.swift in Sources */,
 				6D3543AC2AE64DCD00008D35 /* WeatherVisualRepresentation.swift in Sources */,
